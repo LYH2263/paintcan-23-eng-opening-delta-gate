@@ -13,6 +13,11 @@ class PaintService:
         if not r: return None
         return {"room": r, "openings": openings.for_room(self._c, rid)}
     def settings(self): return settings.get_map(self._c)
+    def add_opening(self, room_id, kind, w, h):
+        if not rooms.get(self._c, room_id): return None
+        oid = openings.insert(self._c, room_id, kind, w, h)
+        return {"id": oid, "room_id": room_id, "kind": kind, "w": w, "h": h}
+    def delete_opening(self, oid): return openings.delete(self._c, oid)
     def history(self, limit=50): return runs.list_recent(self._c, limit)
     def estimate(self, room_id, persist, coats=None, coverage=None):
         detail = self.room_detail(room_id)
